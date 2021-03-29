@@ -23,7 +23,7 @@ public class NeuralNetwork {
 
     public void learn(double[] input, double[] output) {
         double[] output_neural = apply(input);
-        double[] grads = new double[]{ -2 * (output[0] - output_neural[0]) };
+        double[] grads = new double[]{ -2 * (output[0] - output_neural[0]),-2 * (output[1] - output_neural[1])  };
         var r_iterator = neuralNetworkNeurons.descendingIterator();
         while (r_iterator.hasNext()){
             Neuron[] neurons = r_iterator.next();
