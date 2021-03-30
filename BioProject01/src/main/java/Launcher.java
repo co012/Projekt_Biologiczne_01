@@ -1,13 +1,15 @@
+import org.ejml.simple.SimpleMatrix;
+
 import java.util.Arrays;
 import java.util.LinkedList;
 
 public class Launcher {
     private final static double X0 = 0;
     private final static double Y0 = 0;
-    private final static double L1 = 10;
-    private final static double L2 = 5;
+    public final static double L1 = 10;
+    public final static double L2 = 5;
 
-    private static double[] getPoint(double alpha, double beta) {
+    private static SimpleMatrix getPoint(double alpha, double beta) {
         double gamma = 2 * Math.PI - alpha - beta;
         double x = X0;
         x += L1 * Math.sin(alpha);
@@ -17,34 +19,35 @@ public class Launcher {
         y += L1 * Math.cos(alpha);
         y -= L2 * Math.cos(gamma);
 
-        return new double[]{x, y};
+        return new SimpleMatrix(2,1,true,new double[]{x, y});
 
     }
 
-    private static double[][] generateOutputs(int number) {
-        double[][] outputs = new double[number][2];
-        for (double[] output : outputs) {
-            output[0] = Math.random() * 2 * Math.PI;
-            output[1] = Math.random() * 2 * Math.PI;
+    private static SimpleMatrix[] generateOutputs(int number) {
+        SimpleMatrix[] outputs = new SimpleMatrix[number];
+        for(int i =0; i< number;i++) {
+            outputs[i] = new SimpleMatrix(2,1);
+            outputs[i].set(0,0,Math.random() * 2 * Math.PI);
+            outputs[i].set(1,0,Math.random() * 2 * Math.PI);
         }
         return outputs;
     }
 
     public static void main(String[] args) {
         LinkedList<Integer> hiddenLayer = new LinkedList<>();
-        hiddenLayer.add(64);
-        hiddenLayer.add(64);
-        hiddenLayer.add(64);
+        hiddenLayer.add(4);
+        hiddenLayer.add(4);
         hiddenLayer.add(2);
-        NeuralNetwork neuralNetwork = new NeuralNetwork(2, hiddenLayer);
-        final int learningDataLength = 10000;
-        final int learningChunkLength = 100;
+        NeuralNetworkMatrix neuralNetwork = new NeuralNetworkMatrix(2, hiddenLayer);
+        final int learningDataLength = 100000;
+        final int learningChunkLength = 5000;
 
-        double[][] outputs = generateOutputs(learningDataLength);
-        double[][] inputs = new double[learningDataLength][];
+        SimpleMatrix[] outputs = generateOutputs(learningDataLength);
+        SimpleMatrix[] inputs = new SimpleMatrix[learningDataLength];
         for (int i = 0; i < learningDataLength; i++) {
-            inputs[i] = getPoint(outputs[i][0], outputs[i][1]);
+            inputs[i] = getPoint(outputs[i].get(0), outputs[i].get(1));
         }
+        double lastError = 0;
 
         for (int k = 0; k < 10000; k++) {
 
@@ -56,9 +59,13 @@ public class Launcher {
                 }
                 neuralNetwork.backPropagate();
             }
-            System.out.print(Arrays.toString(outputs[0]));
-            System.out.print(Arrays.toString(neuralNetwork.apply(inputs[0])));
+            System.out.print(outputs[0]);
+            System.out.print(neuralNetwork.apply(inputs[0]));
             System.out.write('\n');
+            double currError = neuralNetwork.popError()/learningDataLength;
+            if(currError > lastError) NeuronMatrix.LEARNING_RATE *= 0.9;
+            System.out.println("Epo: " + k  + " mean square error: " + currError);
+            lastError = currError;
 
         }
 
