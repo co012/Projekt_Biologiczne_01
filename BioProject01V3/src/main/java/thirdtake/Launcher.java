@@ -8,7 +8,7 @@ public class Launcher {
     private final static double Y0 = 0;
     public final static double L1 = 5;
     public final static double L2 = 5;
-    public final static int LEARNING_DATA_CHUNK_NUMBER = 1000;
+    public final static int LEARNING_DATA_CHUNK_NUMBER = 10000;
     public final static int LEARNING_DATA_CHUNK_LENGTH = 100;
     public final static int EPOCH = 1000;
 
@@ -42,7 +42,7 @@ public class Launcher {
     public static void main(String[] args){
         NeuralNetwork neuralNetwork = new NeuralNetwork(
                 new int[]{2,32,32,2},
-                new ActivationFunction[]{ActivationFunction.TANH,ActivationFunction.TANH,ActivationFunction.ID}
+                new ActivationFunction[]{ActivationFunction.RELU,ActivationFunction.RELU,ActivationFunction.ID}
                 );
 
         final int LEARNING_DATA_LENGTH = LEARNING_DATA_CHUNK_LENGTH * LEARNING_DATA_CHUNK_NUMBER;
