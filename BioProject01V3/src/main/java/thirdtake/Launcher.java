@@ -2,8 +2,6 @@ package thirdtake;
 
 import org.ejml.simple.SimpleMatrix;
 
-import java.util.Arrays;
-
 public class Launcher {
 
     private final static double X0 = 0;
@@ -14,7 +12,7 @@ public class Launcher {
     public final static int LEARNING_DATA_CHUNK_LENGTH = 100;
     public final static int EPOCH = 1000;
 
-    private final static int TEST_DATA_LENGTH = 10;
+    private final static int TEST_DATA_LENGTH = 100;
 
 
     private static SimpleMatrix getPoint(double alpha, double beta) {
@@ -43,8 +41,8 @@ public class Launcher {
 
     public static void main(String[] args){
         NeuralNetwork neuralNetwork = new NeuralNetwork(
-                new int[]{2,32,16,1},
-                new ActivationFunction[]{ActivationFunction.TANH,ActivationFunction.TANH,ActivationFunction.ID}
+                new int[]{2,32,(int)(L1 + L2 + 2),(int)(L1 + L2 + 2),2},
+                new ActivationFunction[]{ActivationFunction.TANH,ActivationFunction.TANH,ActivationFunction.TANH,ActivationFunction.ID}
                 );
 
         final int LEARNING_DATA_LENGTH = LEARNING_DATA_CHUNK_LENGTH * LEARNING_DATA_CHUNK_NUMBER;
@@ -58,7 +56,7 @@ public class Launcher {
             for (int j = 0; j < LEARNING_DATA_CHUNK_NUMBER; j++) {
                 for (int k = 0; k < LEARNING_DATA_CHUNK_LENGTH; k++) {
                     int index = LEARNING_DATA_CHUNK_LENGTH * j + k;
-                    neuralNetwork.learn(inputs[index],outputs[index].extractVector(true,0));
+                    neuralNetwork.learn(inputs[index],outputs[index]);
                 }
                 neuralNetwork.getSmarter();
             }
@@ -80,9 +78,20 @@ public class Launcher {
             SimpleMatrix output = generateOutputs(1)[0];
             SimpleMatrix input = getPoint(output.get(0),output.get(1));
             SimpleMatrix output_neural = neuralNetwork.answer(input);
-            meanSquareError = Math.pow(output.extractVector(true,0).minus(output_neural).get(0),2);
+            SimpleMatrix diff = output.minus(output_neural);
+            meanSquareError += diff.dot(diff);
         }
         meanSquareError/= TEST_DATA_LENGTH;
+
+        SimpleMatrix output = generateOutputs(1)[0];
+        SimpleMatrix input = getPoint(output.get(0),output.get(1));
+        SimpleMatrix output_neural = neuralNetwork.answer(input);
+        System.out.println("TEST:");
+        System.out.println(input);
+        System.out.println("Output: " + output.get(0) + ", " + output.get(1));
+        System.out.println("Output predicted: " + output_neural.get(0) + ", " + output_neural.get(1));
+        System.out.println("TEST END");
+
 
         return meanSquareError;
     }

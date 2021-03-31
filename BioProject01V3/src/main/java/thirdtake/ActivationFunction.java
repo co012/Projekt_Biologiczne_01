@@ -27,4 +27,18 @@ public interface ActivationFunction {
             return 1;
         }
     };
+
+    ActivationFunction RELU = new ActivationFunction() {
+        @Override
+        public double getVal(double x) {
+            return Math.max(0,x);
+        }
+
+        @Override
+        public double getDerivativeVal(double x) {
+            return x>0 ? 1:0;
+        }
+    };
+
+
 }
