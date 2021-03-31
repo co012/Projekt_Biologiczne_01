@@ -9,7 +9,8 @@ import java.util.LinkedList;
 public class NeuralNetwork {
     private final LinkedList<Layer> layers;
     private double sumSquareError;
-    private double learningRate = 1e-6;
+    private double lastSumSquareError;
+    private double learningRate = 1e-5;
 
     public NeuralNetwork(int[] outputs, ActivationFunction[] activationFunctions) {
         layers = new LinkedList<>();
@@ -43,9 +44,10 @@ public class NeuralNetwork {
     }
 
     public double popSquareError(){
-        double SE = sumSquareError;
+        lastSumSquareError = sumSquareError;
+        if(lastSumSquareError < sumSquareError) learningRate*=0.9;
         sumSquareError = 0;
-        return SE;
+        return lastSumSquareError;
     }
 
     private void backPropagate(SimpleMatrix grads) {
