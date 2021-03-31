@@ -11,7 +11,7 @@ public class NeuronMatrix {
     private double last_output;
     private SimpleMatrix last_input;
 
-    public static double LEARNING_RATE = 1e-5;
+    public static double LEARNING_RATE = 1e-11;
     public final int inputsNumber;
     private final ActivationFunction activationFunction;
 

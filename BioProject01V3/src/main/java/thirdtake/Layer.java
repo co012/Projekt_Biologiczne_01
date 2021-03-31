@@ -1,4 +1,7 @@
+package thirdtake;
+
 import org.ejml.simple.SimpleMatrix;
+import thirdtake.ActivationFunction;
 
 import java.util.Random;
 import java.util.function.Function;

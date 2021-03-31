@@ -1,11 +1,15 @@
+package thirdtake;
+
 import org.ejml.simple.SimpleMatrix;
+import thirdtake.ActivationFunction;
+import thirdtake.Layer;
 
 import java.util.LinkedList;
 
 public class NeuralNetwork {
     private final LinkedList<Layer> layers;
     private double sumSquareError;
-    private double learningRate = 1e-5;
+    private double learningRate = 1e-4;
 
     public NeuralNetwork(int[] outputs, ActivationFunction[] activationFunctions) {
         layers = new LinkedList<>();
@@ -38,6 +42,12 @@ public class NeuralNetwork {
         }
     }
 
+    public double popSquareError(){
+        double SE = sumSquareError;
+        sumSquareError = 0;
+        return SE;
+    }
+
     private void backPropagate(SimpleMatrix grads) {
         var rIterator = layers.descendingIterator();
         while (rIterator.hasNext()) {
@@ -45,5 +55,6 @@ public class NeuralNetwork {
             grads = layer.learn(grads);
         }
     }
+
 
 }
