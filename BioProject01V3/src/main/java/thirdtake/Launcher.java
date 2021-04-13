@@ -8,9 +8,9 @@ public class Launcher {
     private final static double Y0 = 0;
     public final static double L1 = 5;
     public final static double L2 = 5;
-    public final static int LEARNING_DATA_CHUNK_NUMBER = 10000;
+    public final static int LEARNING_DATA_CHUNK_NUMBER = 400;
     public final static int LEARNING_DATA_CHUNK_LENGTH = 100;
-    public final static int EPOCH = 1000;
+    public final static int EPOCH = 500;
 
     private final static int TEST_DATA_LENGTH = 100;
 
@@ -41,18 +41,19 @@ public class Launcher {
 
     public static void main(String[] args){
         NeuralNetwork neuralNetwork = new NeuralNetwork(
-                new int[]{2,32,32,2},
-                new ActivationFunction[]{ActivationFunction.RELU,ActivationFunction.RELU,ActivationFunction.ID}
+                new int[]{2,32,32,16,8,2},
+                new ActivationFunction[]{ActivationFunction.RELU,ActivationFunction.RELU,ActivationFunction.RELU,ActivationFunction.RELU,ActivationFunction.ID}
                 );
 
         final int LEARNING_DATA_LENGTH = LEARNING_DATA_CHUNK_LENGTH * LEARNING_DATA_CHUNK_NUMBER;
         SimpleMatrix[] outputs = generateOutputs(LEARNING_DATA_LENGTH);
         SimpleMatrix[] inputs = new SimpleMatrix[LEARNING_DATA_LENGTH];
-        for (int i = 0; i < LEARNING_DATA_LENGTH; i++) {
-            inputs[i] = getPoint(outputs[i].get(0),outputs[i].get(1));
+        for (int a = 0; a < LEARNING_DATA_LENGTH; a++) {
+            inputs[a] = getPoint(outputs[a].get(0),outputs[a].get(1));
         }
 
         for (int i = 0; i < EPOCH; i++) {
+
             for (int j = 0; j < LEARNING_DATA_CHUNK_NUMBER; j++) {
                 for (int k = 0; k < LEARNING_DATA_CHUNK_LENGTH; k++) {
                     int index = LEARNING_DATA_CHUNK_LENGTH * j + k;

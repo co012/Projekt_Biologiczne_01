@@ -13,17 +13,28 @@ public class Layer {
     private SimpleMatrix delta_bias;
     private SimpleMatrix last_input,last_output;
 
+    private final Optimizer bias_optimizer;
+    private final Optimizer weights_optimizer;
+
     private final ActivationFunction activationFunction;
 
     public Layer(int inputsNumber,int outputsNumber,ActivationFunction activationFunction){
+        this(inputsNumber,outputsNumber,activationFunction,Optimizer.SIMPLE,Optimizer.SIMPLE);
+    }
+
+    public Layer(int inputsNumber,int outputsNumber,ActivationFunction activationFunction,Optimizer weights_optimizer,Optimizer bias_optimizer){
         this.activationFunction = activationFunction;
+        this.bias_optimizer = bias_optimizer;
+        this.weights_optimizer = weights_optimizer;
         Random random = new Random();
-        weights = SimpleMatrix.random_DDRM(outputsNumber,inputsNumber,-1,1,random);
+        weights = SimpleMatrix.random_DDRM(outputsNumber,inputsNumber,0,1,random);
         delta_weights = new SimpleMatrix(outputsNumber,inputsNumber);
-        bias = SimpleMatrix.random_DDRM(outputsNumber,1,-1,1,random);
+        bias = SimpleMatrix.random_DDRM(outputsNumber,1,0,1,random);
         delta_bias = new SimpleMatrix(outputsNumber,1);
 
     }
+
+
 
     public SimpleMatrix answer(SimpleMatrix input){
         last_input = input;
@@ -43,10 +54,10 @@ public class Layer {
     }
 
     public void getSmarter(){
-        weights = weights.minus(delta_weights);
+        weights = weights_optimizer.optimize(weights,delta_weights);
         delta_weights.zero();
 
-        bias = bias.minus(delta_bias);
+        bias = bias_optimizer.optimize(bias,delta_bias);
         delta_bias.zero();
 
     }

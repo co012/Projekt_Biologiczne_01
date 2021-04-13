@@ -10,12 +10,13 @@ public class NeuralNetwork {
     private final LinkedList<Layer> layers;
     private double sumSquareError;
     private double lastSumSquareError;
-    private double learningRate = 1e-5;
+    private double learningRate = 1e-7;
 
     public NeuralNetwork(int[] outputs, ActivationFunction[] activationFunctions) {
         layers = new LinkedList<>();
-        for (int i = 1; i < outputs.length; i++) {
-            layers.add(new Layer(outputs[i - 1], outputs[i], activationFunctions[i - 1]));
+        int i;
+        for (i = 1; i < outputs.length; i++) {
+            layers.add(new Layer(outputs[i - 1], outputs[i], activationFunctions[i - 1],new AdamOptimizer(outputs[i], outputs[i-1]),new AdamOptimizer(outputs[i],1)));
         }
         sumSquareError = 0;
 
@@ -45,7 +46,7 @@ public class NeuralNetwork {
 
     public double popSquareError(){
         lastSumSquareError = sumSquareError;
-        if(lastSumSquareError < sumSquareError) learningRate*=0.9;
+        //if(lastSumSquareError < sumSquareError) learningRate*=0.5;
         sumSquareError = 0;
         return lastSumSquareError;
     }
