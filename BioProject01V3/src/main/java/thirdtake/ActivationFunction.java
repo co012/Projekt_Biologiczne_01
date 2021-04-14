@@ -40,5 +40,17 @@ public interface ActivationFunction {
         }
     };
 
+    ActivationFunction LEAKY_RELU = new ActivationFunction() {
+        @Override
+        public double getVal(double x) {
+            return x>0 ? x:0.01 * x;
+        }
+
+        @Override
+        public double getDerivativeVal(double x) {
+            return x>0 ? 1:0.01;
+        }
+    };
+
 
 }

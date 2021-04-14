@@ -10,7 +10,7 @@ public class NeuralNetwork {
     private final LinkedList<Layer> layers;
     private double sumSquareError;
     private double lastSumSquareError;
-    private double learningRate = 1e-7;
+    private double learningRate = 1e-8;
 
     public NeuralNetwork(int[] outputs, ActivationFunction[] activationFunctions) {
         layers = new LinkedList<>();
@@ -32,7 +32,7 @@ public class NeuralNetwork {
     public void learn(SimpleMatrix input, SimpleMatrix output) {
         SimpleMatrix output_neural = answer(input);
         SimpleMatrix error = output.minus(output_neural);
-        sumSquareError = error.dot(error);
+        sumSquareError += error.dot(error);
         backPropagate(error.scale(-2 * learningRate));
 
 
