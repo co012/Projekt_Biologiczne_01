@@ -4,6 +4,7 @@ import org.ejml.simple.SimpleMatrix;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.PrintStream;
 
 public class Launcher {
 
@@ -113,8 +114,17 @@ public class Launcher {
     private static void save(NeuralNetwork neuralNetwork){
         try {
             String path = System.getProperty("user.dir") + "\\NN" + bestSquareError;
-            File folder = new File(path);
-            System.out.println(folder.mkdirs());
+            File dir = new File(path);
+            boolean result = dir.mkdir();
+            if(!result){
+                System.out.println("Couldn't create directory");
+                return;
+            }
+            PrintStream infoStream = new PrintStream(path + "\\info");
+            infoStream.println(L1);
+            infoStream.println(L2);
+            infoStream.println(X0);
+            infoStream.println(Y0);
             neuralNetwork.save(path);
         } catch (IOException e) {
             e.printStackTrace();
