@@ -2,17 +2,22 @@ package thirdtake;
 
 import org.ejml.simple.SimpleMatrix;
 
+import java.io.File;
+import java.io.IOException;
+
 public class Launcher {
 
     private final static double X0 = 0;
     private final static double Y0 = 0;
-    public final static double L1 = 15;
+    public final static double L1 = 10;
     public final static double L2 = 5;
     public final static int LEARNING_DATA_CHUNK_NUMBER = 100;
     public final static int LEARNING_DATA_CHUNK_LENGTH = 1000;
-    public final static int EPOCH = 5000;
+    public final static int EPOCH = 1000;
 
     private final static int TEST_DATA_LENGTH = 1000;
+
+    private static double bestSquareError = 0.7;
 
 
     private static SimpleMatrix getPoint(double alpha, double beta) {
@@ -65,8 +70,15 @@ public class Launcher {
 
             System.out.println("EPOCH " + i);
             System.out.println("Training MSE " + neuralNetwork.popSquareError()/LEARNING_DATA_LENGTH);
-            System.out.println("New data MSE " + getNewDataMSE(neuralNetwork));
+            double mse = getNewDataMSE(neuralNetwork);
+            System.out.println("New data MSE " + mse);
             System.out.println("--------------------------");
+            if(mse < bestSquareError){
+                bestSquareError = mse;
+                save(neuralNetwork);
+            }
+
+
         }
 
 
@@ -96,5 +108,16 @@ public class Launcher {
 
 
         return meanSquareError;
+    }
+
+    private static void save(NeuralNetwork neuralNetwork){
+        try {
+            String path = System.getProperty("user.dir") + "\\NN" + bestSquareError;
+            File folder = new File(path);
+            System.out.println(folder.mkdirs());
+            neuralNetwork.save(path);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

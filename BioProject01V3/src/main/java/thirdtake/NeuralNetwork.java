@@ -4,6 +4,7 @@ import org.ejml.simple.SimpleMatrix;
 import thirdtake.ActivationFunction;
 import thirdtake.Layer;
 
+import java.io.*;
 import java.util.LinkedList;
 
 public class NeuralNetwork {
@@ -56,6 +57,14 @@ public class NeuralNetwork {
         while (rIterator.hasNext()) {
             Layer layer = rIterator.next();
             grads = layer.learn(grads);
+        }
+    }
+
+    public void save(String folderPath) throws IOException {
+        int i =0;
+        for (Layer layer : layers){
+            layer.save(folderPath + "\\layer" + i);
+            i++;
         }
     }
 

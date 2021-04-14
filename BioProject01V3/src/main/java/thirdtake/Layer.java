@@ -3,6 +3,7 @@ package thirdtake;
 import org.ejml.simple.SimpleMatrix;
 import thirdtake.ActivationFunction;
 
+import java.io.IOException;
 import java.util.Random;
 import java.util.function.Function;
 
@@ -66,6 +67,11 @@ public class Layer {
         for (int i = 0; i < s.getNumElements(); i++) {
             s.set(i,f.apply(s.get(i)));
         }
+    }
+
+    public void save(String filePath) throws IOException {
+        weights.saveToFileBinary(filePath + "W");
+        bias.saveToFileBinary(filePath+"B");
     }
 
 
