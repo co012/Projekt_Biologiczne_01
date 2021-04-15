@@ -47,8 +47,8 @@ public class Launcher {
 
     public static void main(String[] args){
         NeuralNetwork neuralNetwork = new NeuralNetwork(
-                new int[]{2,8,256,2},
-                new ActivationFunction[]{ActivationFunction.LEAKY_RELU,ActivationFunction.LEAKY_RELU,ActivationFunction.ID}
+                new int[]{2,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,8,2},
+                new ActivationFunction[]{ActivationFunction.LEAKY_RELU,ActivationFunction.LEAKY_RELU,ActivationFunction.LEAKY_RELU,ActivationFunction.LEAKY_RELU,ActivationFunction.LEAKY_RELU,ActivationFunction.LEAKY_RELU,ActivationFunction.LEAKY_RELU,ActivationFunction.LEAKY_RELU,ActivationFunction.LEAKY_RELU,ActivationFunction.LEAKY_RELU,ActivationFunction.LEAKY_RELU,ActivationFunction.LEAKY_RELU,ActivationFunction.LEAKY_RELU,ActivationFunction.LEAKY_RELU,ActivationFunction.LEAKY_RELU,ActivationFunction.LEAKY_RELU,ActivationFunction.ID}
                 );
 
         final int LEARNING_DATA_LENGTH = LEARNING_DATA_CHUNK_LENGTH * LEARNING_DATA_CHUNK_NUMBER;
